@@ -1,0 +1,47 @@
+<div class="login-container">
+    <h2>Login</h2>
+    <app-student-list></app-student-list>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email" 
+          placeholder="Enter your email"
+        >
+        <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="error">
+          <div *ngIf="email?.errors?.['required']">Email is required</div>
+          <div *ngIf="email?.errors?.['email']">Please enter a valid email</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          formControlName="password" 
+          placeholder="Enter your password"
+        >
+        <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error">
+          <div *ngIf="password?.errors?.['required']">Password is required</div>
+          <div *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters</div>
+        </div>
+      </div>
+      
+      <div *ngIf="error$ | async as error" class="alert alert-danger">
+        {{ error }}
+      </div>
+      
+      <button type="submit" [disabled]="loginForm.invalid || (loading$ | async)">
+        <span *ngIf="loading$ | async">Loading...</span>
+        <span *ngIf="!(loading$ | async)">Login</span>
+      </button>
+    </form>
+    
+    <div class="register-link">
+      <p>Don't have an account? <a routerLink="/register">Register now</a></p>
+    </div>
+  </div>
