@@ -1,0 +1,53 @@
+<div *ngIf="course" class="course-details-container">
+    <div class="course-header">
+      <h2>{{ course.title }}</h2>
+      <button 
+        *ngIf="(currentUser$ | async)?.role === 'admin'" 
+        (click)="editCourse()"
+      >
+        Edit Course
+      </button>
+    </div>
+    
+    <div class="course-content">
+      <section class="course-description">
+        <h3>Description</h3>
+        <p>{{ course.description }}</p>
+      </section>
+      
+      <section class="course-metadata">
+        <div class="metadata-grid">
+          <div class="metadata-item">
+            <strong>Created By:</strong> 
+            {{ course.createdBy }}
+          </div>
+          <div class="metadata-item">
+            <strong>Created At:</strong> 
+            {{ course.createdAt | date:'medium' }}
+          </div>
+        </div>
+      </section>
+      
+      <section class="course-participants">
+        <h3>Teachers</h3>
+        <ul *ngIf="course.teachers?.length; else noTeachers">
+          <li *ngFor="let teacher of course.teachers">
+            {{ teacher }}
+          </li>
+        </ul>
+        <ng-template #noTeachers>
+          <p>No teachers assigned</p>
+        </ng-template>
+        
+        <h3>Students</h3>
+        <ul *ngIf="course.students?.length; else noStudents">
+          <li *ngFor="let student of course.students">
+            {{ student }}
+          </li>
+        </ul>
+        <ng-template #noStudents>
+          <p>No students enrolled</p>
+        </ng-template>
+      </section>
+    </div>
+  </div>
