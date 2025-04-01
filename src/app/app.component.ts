@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { StudentListComponent } from "./student-list/student-list.component";
 import { CourseListComponent } from "./courses/course-list/course-list.component";
 
 @Component({

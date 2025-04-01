@@ -51,6 +51,11 @@
           placeholder="Create an optional enrollment code"
         >
       </div>
+
+      <app-user-list 
+    [roleFilter]="'teacher'" 
+    (userSelected)="onTeacherSelected($event)">
+  </app-user-list>
       
       <button 
         type="submit" 

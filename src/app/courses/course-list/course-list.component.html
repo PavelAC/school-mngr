@@ -1,34 +1,51 @@
-<div class="course-list-container">
-    <h2>Courses</h2>
-    
-    <div *ngIf="loading$ | async" class="loading">
-      Loading courses...
-    </div>
-    
-    <div *ngIf="error$ | async as error" class="error">
-      {{ error }}
-    </div>
-    
-    <div *ngIf="!(loading$ | async)" class="courses-grid">
-      <div 
-        *ngFor="let course of courses$ | async" 
-        class="course-card"
-        (click)="selectCourse(course.id)"
-      >
-        <h3>{{ course.title }}</h3>
-        <p>{{ course.description }}</p>
-        <div class="course-meta">
-          <span>Students: {{ course.students?.length || 0 }}</span>
-          <span>Created: {{ course.createdAt | date }}</span>
-        </div>
-        <button 
-          *ngIf="(currentUser$ | async)?.role === 'student'"
-          (click)="enrollInCourse(course.id, $event)"
-        >
-          Enroll
-        </button>
-      </div>
-    </div>
-    
-    <app-course *ngIf="(selectedCourse$ | async) as selectedCourse" [course]="selectedCourse"></app-course>
+<!-- <div class="course-list-container">
+  <div *ngIf="loading$ | async" class="loading-indicator">
+    Loading courses...
+  </div> -->
+
+  <!-- <div *ngIf="error$ | async as error" class="error-message">
+    Error loading courses: {{ error }}
+  </div> -->
+
+  <!-- <div *ngIf="(courses$ | async)?.length === 0 && !(loading$ | async)" class="empty-state">
+    No courses available
   </div>
+
+  <div class="course-list">
+    <div 
+      *ngFor="let course of courses$ | async" 
+      class="course-card"
+      [class.selected]="(selectedCourseId$ | async) === course.id"
+      (click)="selectCourse(course.id)"
+    >
+      <h3>{{ course.title }}</h3>
+      <p>{{ course.description }}</p>
+    </div>
+  </div>
+
+  <div class="selected-course" *ngIf="selectedCourse$ | async as selectedCourse">
+    <app-course [courseId]="selectedCourse.id"></app-course>
+  </div>
+</div> -->
+
+<div class="course-list">
+  <!-- Show loading indicator -->
+  <div *ngIf="loading$ | async">Loading courses...</div>
+  
+  <!-- List of courses -->
+  <div class="courses-container">
+    <div *ngFor="let course of courses$ | async" 
+         class="course-item"
+         [class.selected]="(selectedCourseId$ | async) === course.id"
+         (click)="selectCourse(course.id)">
+      {{ course.title }}
+      <!-- Other course summary info -->
+    </div>
+  </div>
+  
+  <!-- Selected course detail -->
+  <app-course 
+    *ngIf="selectedCourse$ | async as selectedCourse" 
+    [course]="selectedCourse">
+  </app-course>
+</div>

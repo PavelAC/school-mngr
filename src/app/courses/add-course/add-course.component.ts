@@ -1,47 +1,40 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   
-// })
-// export class AddCourseComponent {
-
-// }
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { take, filter } from 'rxjs/operators';
-
-import * as CourseActions from '../store/courses.actions';
-import * as fromAuth from '../../auth/store/auth.selectors';
-import { Course } from '../../models/course';
-import { User } from '../../models/user.model';
-import { AuthState } from '../../auth/store/auth.reducer';
-import { CoursesState } from '../store/courses.reducer';
 import { CommonModule } from '@angular/common';
 
+import * as CourseActions from '../../store/course/courses.actions';
+import * as fromAuth from '../../store/auth/auth.selectors';
+import { Course } from '../../models/course';
+import { User } from '../../models/user.model';
+import { AuthState } from '../../store/auth/auth.reducer';
+import { CoursesState } from '../../store/course/courses.reducer';
+import { UserListComponent } from "../../student-list/user-list.component";
+
 @Component({
-    selector: 'app-add-course',
-    standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
-    templateUrl: './add-course.component.html',
-    styleUrl: './add-course.component.css'
+  selector: 'app-add-course',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, UserListComponent],
+  templateUrl: './add-course.component.html',
+  styleUrls: ['./add-course.component.css']
 })
 export class AddCourseComponent implements OnInit {
   courseForm: FormGroup;
   isAdmin$: Observable<boolean>;
   isSubmitting = false;
   error: string | null = null;
-  currentUser: Observable<User | null>;
-
+  currentUser$: Observable<User | null>;
+  selectedTeacher: User | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private store: Store<CoursesState>,
-    private authStore: Store<AuthState>
+    private store: Store<{ courses: CoursesState, auth: AuthState }>,
   ) {
-    this.currentUser = this.authStore.select(fromAuth.selectCurrentUser);
-    // Create form with validators
+    this.currentUser$ = this.store.select(fromAuth.selectCurrentUser);
+    this.isAdmin$ = this.store.select(fromAuth.selectIsAdmin);
+
     this.courseForm = this.fb.group({
       title: ['', [
         Validators.required, 
@@ -53,29 +46,21 @@ export class AddCourseComponent implements OnInit {
         Validators.minLength(10),
         Validators.maxLength(500)
       ]],
-      enrollmentCode: ['']
+      enrollmentCode: [''],
+      teacherId: [null] 
     });
-
-    // Check if current user is an admin
-    this.isAdmin$ = this.store.select(fromAuth.selectIsAdmin);
-
-    // Get current user
-    this.store.select(fromAuth.selectCurrentUser)
-      .pipe(take(1))
-      .subscribe(user => {
-        this.currentUser = this.store.select(fromAuth.selectCurrentUser);
-
-      });
+  }
+  onTeacherSelected(user: User) {
+    this.selectedTeacher = user;
+    this.courseForm.patchValue({ teacherId: user.uid }); 
   }
 
   ngOnInit() {
-    // Optional: Subscribe to course creation success/failure
-    this.store.select(state => state.courses)
-      .pipe(
-        filter(error => !!error)
-      )
+    this.store.select(state => state.courses.error)
+      .pipe(filter(error => !!error))
       .subscribe(error => {
         this.isSubmitting = false;
+        this.error = error;
       });
   }
 
@@ -92,41 +77,37 @@ export class AddCourseComponent implements OnInit {
     this.isSubmitting = true;
     this.error = null;
   
-    // Fetch the current user before dispatching
-    this.currentUser.pipe(take(1)).subscribe(user => {
+    this.currentUser$.pipe(take(1)).subscribe(user => {
       if (!user) {
         this.error = "User not found!";
         this.isSubmitting = false;
         return;
       }
   
-      const courseData: Omit<Course, 'id'> = {
-        ...this.courseForm.value,
-        createdBy: user.uid,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        students: [],
-        teachers: []
-      };
-  
       if (user.role !== 'admin' && user.role !== 'teacher') {
         this.error = "Permission denied: You do not have the required role to create a course.";
         this.isSubmitting = false;
         return;
       }
-      
-      this.store.dispatch(CourseActions.createCourse({ course: courseData, user }));
 
-  
-      this.courseForm.reset({
-        title: '',
-        description: '',
-        enrollmentCode: ''
-      });
+      const formValue = this.courseForm.value;
+      const courseData: Omit<Course, 'id'> = {
+        title: formValue.title,
+        description: formValue.description,
+        enrollmentCode: formValue.enrollmentCode || undefined,
+        createdBy: user.uid,
+        teacherId: formValue.teacherId || null, 
+        studentIds: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      this.store.dispatch(CourseActions.createCourse({ 
+        course: courseData, 
+        user 
+      }));
   
       this.isSubmitting = false;
     });
   }
-  
-  
 }

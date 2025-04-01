@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, map, take } from 'rxjs';
-import { selectCurrentUser } from '../store/auth.selectors';
+import { selectCurrentUser } from '../../store/auth/auth.selectors';
 
 @Injectable({
   providedIn: 'root'

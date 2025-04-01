@@ -1,4 +1,4 @@
-<div class="students-container">
+<!-- <div class="students-container">
     <h2 class="text-xl font-semibold mb-4">Enrolled Students</h2>
     
     <div *ngIf="loading" class="text-center p-4">
@@ -27,5 +27,21 @@
     
     <div *ngIf="students.length === 0 && !loading" class="text-center p-4 bg-gray-50 rounded">
       No students enrolled in this course.
+    </div>
+  </div> -->
+
+  <div class="user-list">
+    <div *ngIf="loading" class="loading">Loading users...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+    
+    <ul *ngIf="!loading && !error">
+      <li *ngFor="let user of users">
+        {{ user.displayName || user.email }}
+        <span class="role-badge">{{ user.role }}</span>
+      </li>
+    </ul>
+  
+    <div *ngIf="!loading && users.length === 0" class="empty">
+      No users found
     </div>
   </div>
