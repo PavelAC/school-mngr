@@ -12,9 +12,13 @@ import {
   doc, 
   setDoc, 
   getDoc, 
-  updateDoc 
+  updateDoc, 
+  collection,
+  query,
+  where,
+  getDocs
 } from '@angular/fire/firestore';
-import { Observable, from, map, switchMap, of, tap, catchError } from 'rxjs';
+import { Observable, from, map, switchMap, of, tap, catchError, take, throwError } from 'rxjs';
 import { User } from '../../models/user.model';
 import { UserRole } from '../../models/user-roles.enum';
 
@@ -90,6 +94,36 @@ export class AuthService {
       catchError(error => {
         console.error('Error fetching user data:', error);
         return of(null);
+      })
+    );
+  }
+
+  
+  getAllUsers(): Observable<User[]> {
+    return this.firebaseUser$.pipe(
+      take(1),
+      switchMap(firebaseUser => {
+        if (!firebaseUser) {
+          return throwError(() => new Error('Not authenticated'));
+        }
+  
+        const usersRef = collection(this.firestore, 'users');
+        return from(getDocs(usersRef)).pipe(
+          map(querySnapshot => {
+            return querySnapshot.docs.map(doc => ({
+              uid: doc.id,
+              ...doc.data() as Omit<User, 'uid'>
+            }));
+          }),
+          catchError(error => {
+            console.error('Error fetching users:', error);
+            return throwError(() => new Error('Failed to load users'));
+          })
+        );
+      }),
+      catchError(error => {
+        console.error('Auth error:', error);
+        return of([]);
       })
     );
   }

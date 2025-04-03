@@ -1,66 +1,113 @@
 <div class="add-course-container">
-    <h2>Create New Course</h2>
-    
-    <div *ngIf="!(isAdmin$ | async)" class="unauthorized">
-      <p>Access Denied: You must be an administrator to create courses.</p>
+  <h2>Create New Course</h2>
+  
+  <!-- Access Control Message -->
+  <div *ngIf="!(isAdmin$ | async)" class="unauthorized-message">
+    <!-- <mat-icon>warning</mat-icon> -->
+    <p>Access Denied: You must be an administrator to create courses.</p>
+  </div>
+  
+  <!-- Course Form -->
+  <form 
+    *ngIf="(isAdmin$ | async)"
+    [formGroup]="courseForm" 
+    (ngSubmit)="onSubmit()"
+    class="course-form"
+  >
+    <!-- Course Title -->
+    <div class="form-group">
+      <label for="title">Course Title *</label>
+      <input 
+        type="text" 
+        id="title" 
+        formControlName="title" 
+        placeholder="Enter course title"
+        [class.invalid]="courseForm.get('title')?.invalid && courseForm.get('title')?.touched"
+      >
+      <div 
+        *ngIf="courseForm.get('title')?.invalid && courseForm.get('title')?.touched" 
+        class="error-message"
+      >
+        <!-- <mat-icon>error_outline</mat-icon> -->
+        <span *ngIf="courseForm.get('title')?.errors?.['required']">Title is required</span>
+        <span *ngIf="courseForm.get('title')?.errors?.['minlength']">
+          Must be at least {{courseForm.get('title')?.errors?.['minlength'].requiredLength}} characters
+        </span>
+      </div>
     </div>
     
-    <form 
-      *ngIf="isAdmin$ | async"
-      [formGroup]="courseForm" 
-      (ngSubmit)="onSubmit()"
-      class="course-form"
-    >
-      <div class="form-group">
-        <label for="title">Course Title</label>
-        <input 
-          type="text" 
-          id="title" 
-          formControlName="title" 
-          placeholder="Enter course title"
-        >
-        <div 
-          *ngIf="courseForm.get('title')?.invalid && courseForm.get('title')?.touched" 
-          class="error-message"
-        >
-          Title is required and must be at least 3 characters long
-        </div>
+    <!-- Course Description -->
+    <div class="form-group">
+      <label for="description">Course Description *</label>
+      <textarea 
+        id="description" 
+        formControlName="description" 
+        placeholder="Provide a detailed course description"
+        [class.invalid]="courseForm.get('description')?.invalid && courseForm.get('description')?.touched"
+        rows="4"
+      ></textarea>
+      <div 
+        *ngIf="courseForm.get('description')?.invalid && courseForm.get('description')?.touched" 
+        class="error-message"
+      >
+        <!-- <mat-icon>error_outline</mat-icon> -->
+        <span *ngIf="courseForm.get('description')?.errors?.['required']">Description is required</span>
+        <span *ngIf="courseForm.get('description')?.errors?.['minlength']">
+          Must be at least {{courseForm.get('description')?.errors?.['minlength'].requiredLength}} characters
+        </span>
       </div>
-      
-      <div class="form-group">
-        <label for="description">Course Description</label>
-        <textarea 
-          id="description" 
-          formControlName="description" 
-          placeholder="Provide a detailed course description"
-        ></textarea>
-        <div 
-          *ngIf="courseForm.get('description')?.invalid && courseForm.get('description')?.touched" 
-          class="error-message"
-        >
-          Description is required and must be at least 10 characters long
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="enrollmentCode">Enrollment Code (Optional)</label>
+    </div>
+    
+    <!-- Enrollment Code -->
+    <div class="form-group">
+      <label for="enrollmentCode">Enrollment Code (Optional)</label>
+      <div class="input-with-hint">
         <input 
           type="text" 
           id="enrollmentCode" 
           formControlName="enrollmentCode" 
-          placeholder="Create an optional enrollment code"
+          placeholder="Leave blank to auto-generate"
         >
+        <div class="hint">If left blank, a code will be generated automatically</div>
       </div>
-      
+    </div>
+
+    <!-- Teacher Selection -->
+    <div class="form-group">
+      <label>Select Teacher *</label>
+      <app-user-list 
+        [roleFilter]="'teacher'"
+        (userSelected)="onTeacherSelected($event)"
+        [class.invalid]="courseForm.get('teacherId')?.invalid && courseForm.get('teacherId')?.touched"
+      ></app-user-list>
+      <div 
+        *ngIf="courseForm.get('teacherId')?.invalid && courseForm.get('teacherId')?.touched" 
+        class="error-message"
+      >
+        <!-- <mat-icon>error_outline</mat-icon> -->
+        <span>Please select a teacher for this course</span>
+      </div>
+    </div>
+    
+    <!-- Form Actions -->
+    <div class="form-actions">
       <button 
         type="submit" 
+        class="primary-button"
         [disabled]="courseForm.invalid || isSubmitting"
       >
-        {{ isSubmitting ? 'Creating...' : 'Create Course' }}
+        <span *ngIf="!isSubmitting">Create Course</span>
+        <span *ngIf="isSubmitting">
+          <!-- <mat-spinner diameter="20"></mat-spinner> -->
+          Creating...
+        </span>
       </button>
-    </form>
-    
-    <div *ngIf="error" class="error-message">
-      {{ error }}
     </div>
+  </form>
+  
+  <!-- Error Message -->
+  <div *ngIf="error" class="error-message global-error">
+    <!-- <mat-icon>error</mat-icon> -->
+    <span>{{ error }}</span>
   </div>
+</div>

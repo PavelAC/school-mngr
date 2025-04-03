@@ -1,6 +1,7 @@
-import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { createAction, createActionGroup, emptyProps, props } from '@ngrx/store';
 import { User } from '../../models/user.model';
 import { UserRole } from '../../models/user-roles.enum';
+import { Grade } from '../../models/grade.model';
 
 export const AuthActions = createActionGroup({
   source: 'Auth',
@@ -35,3 +36,26 @@ export const AuthActions = createActionGroup({
     'Update Profile Failure': props<{ error: any }>(),
   }
 });
+export const loadUsers = createAction('[User ] Load Users');
+export const loadUsersSuccess = createAction('[User ] Load Users Success', props<{ users: User[] }>());
+export const loadUsersFailure = createAction('[User ] Load Users Failure', props<{ error: any }>())
+
+export const loadGrades = createAction(
+  '[Grades] Load Grades',
+  props<{ courseId: string }>()
+);
+
+export const loadGradesSuccess = createAction(
+  '[Grades] Load Grades Success',
+  props<{ grades: Grade[] }>()
+);
+
+export const loadGradesFailure = createAction(
+  '[Grades] Load Grades Failure',
+  props<{ error: string }>()
+);
+
+export const addGrade = createAction(
+  '[Grades] Add Grade',
+  props<{ courseId: string, studentId: string, grade: number }>()
+);

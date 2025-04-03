@@ -13,10 +13,11 @@ export interface Course {
   id: string;
   title: string;
   description: string;
-  createdBy: string; // UID of the admin who created it
-  createdAt: Date;
-  updatedAt: Date;
+  createdBy: string; // Admin UID
+  createdAt: Date ;
+  updatedAt: Date ;
   enrollmentCode?: string;
-  students?: string[]; // UIDs of enrolled students
-  teachers?: string[]; // UIDs of assigned teachers
+  studentIds?: string[]; // Enrolled students
+  teacherId?: string | null; // Primary teacher UID
+  assignmentIds?: string[]; // References to assignments
 }
