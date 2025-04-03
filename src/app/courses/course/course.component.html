@@ -1,117 +1,3 @@
-<!-- <div class="course-details-container" *ngIf="course$ | async as course">
-  <div class="course-header">
-    <h2>{{ course.title }}</h2>
-    <div class="course-actions">
-      <button 
-        *ngIf="(isAdmin$ | async) || (isCourseTeacher$ | async)"
-        (click)="editCourse()"
-        class="btn-edit"
-      >
-        Edit Course
-      </button>
-      
-      <button 
-        *ngIf="isAdmin$ | async"
-        (click)="toggleTeacherAssignment()"
-        class="btn-assign"
-      >
-        {{ showTeacherAssignment ? 'Cancel' : 'Assign Teacher' }}
-      </button>
-      
-      <button 
-        *ngIf="(isAdmin$ | async) && course.teacherId"
-        (click)="removeTeacher()"
-        class="btn-remove"
-      >
-        Remove Teacher
-      </button>
-    </div>
-  </div>
-  
-  <div class="teacher-assignment-section" *ngIf="showTeacherAssignment && (isAdmin$ | async)">
-    <h3>Assign Teacher</h3>
-    <app-user-list 
-      [showAllUsers]="true" 
-      [roleFilter]="'teacher'"
-      (userSelected)="assignTeacher($event)"
-    ></app-user-list>
-  </div>
-
-  <div class="course-content">
-    <section class="course-description">
-      <h3>Description</h3>
-      <p>{{ course.description }}</p>
-    </section>
-    
-    <section class="course-metadata">
-      <div class="metadata-grid">
-        <div class="metadata-item">
-          <strong>Created By:</strong> 
-          <span>{{ course.createdBy }}</span>
-        </div>
-        <div class="metadata-item">
-          <strong>Created At:</strong> 
-          <span>{{ course.createdAt | date:'mediumDate' }}</span>
-        </div>
-        <div class="metadata-item" *ngIf="course.teacherId">
-          <strong>Teacher:</strong> 
-          <span>{{ course.teacherId }}</span>
-        </div>
-        <div class="metadata-item">
-          <strong>Last Updated:</strong> 
-          <span>{{ course.updatedAt | date:'mediumDate' }}</span>
-        </div>
-      </div>
-    </section>
-    
-    <section class="course-participants">
-      <div class="participants-section">
-        <h3>Students ({{ course.studentIds?.length || 0 }})</h3>
-        <app-user-list 
-          [userIds]="course.studentIds || []" 
-          [roleFilter]="'student'"
-        ></app-user-list>
-        <ng-container *ngIf="(currentUser$ | async) as currentUser">
-          <button 
-            *ngIf="currentUser?.role === 'student' && 
-                   !course.studentIds?.includes(currentUser?.uid || '')"
-            (click)="enrollStudent(currentUser?.uid || '')"
-            class="btn-enroll"
-          >
-            Enroll in Course
-          </button>
-        </ng-container>
-      </div>
-    </section>
-  </div>
-</div>
-
-<div *ngIf="!(course$ | async)" class="loading-message">
-  <p>Loading course details...</p>
-</div> -->
-
-<!-- <div class="metadata-item" *ngIf="course?.teacherId">
-  <strong>Teacher:</strong> 
-  <ng-container *ngIf="(teacher$ | async) as teacher; else teacherIdFallback">
-    <span>{{ teacher?.displayName ?? course?.teacherId }}</span>
-  </ng-container>
-</div>
-
-<ng-template #teacherIdFallback>
-  <span>{{ course?.teacherId }}</span>
-</ng-template>
-
-<ng-container *ngIf="(currentUser$ | async) as currentUser">
-  <button 
-    *ngIf="currentUser?.role === 'student' && 
-           !(course?.studentIds?.includes(currentUser?.uid ?? ''))"
-    (click)="enrollStudent(currentUser?.uid ?? '')"
-    class="btn-enroll"
-  >
-    Enroll in Course
-  </button>
-</ng-container> -->
-
 <div *ngIf="course" class="course-details-container">
   <div class="course-header">
     <h2>{{ course.title }}</h2>
@@ -121,6 +7,14 @@
     >
       Edit Course
     </button>
+    <ng-container *ngIf="(currentUser$ | async) as currentUser">
+      <button 
+        *ngIf="currentUser?.role === 'student'" 
+        (click)="enrollStudent(currentUser.uid)"
+      >
+        Enroll
+      </button>
+    </ng-container>
   </div>
   
   <div class="course-content">
@@ -133,7 +27,9 @@
       <div class="metadata-grid">
         <div class="metadata-item">
           <strong>Created By:</strong> 
-          {{ course.createdBy }}
+          <span *ngIf="creator$ | async as creator">
+            {{ creator.displayName || 'Unknown user' }}
+          </span>
         </div>
         <div class="metadata-item">
           <strong>Created At:</strong> 
@@ -143,22 +39,23 @@
     </section>
     
     <section class="course-participants">
-      <h3>Teachers</h3>
-      <ul *ngIf="course.teacherId?.length; else noTeachers">
-        <li *ngFor="let teacher of course.teacherId">
-          {{ teacher }}
-        </li>
-      </ul>
+      <h3>Teacher</h3>
+      <div *ngIf="teacher$ | async as teacher; else noTeachers">
+        {{ teacher.displayName || 'No name provided' }}
+        <small>({{ teacher.email }})</small>
+      </div>
       <ng-template #noTeachers>
         <p>No teachers assigned</p>
       </ng-template>
-      
-      <h3>Students</h3>
-      <ul *ngIf="course.studentIds?.length; else noStudents">
-        <li *ngFor="let student of course.studentIds">
-          {{ student }}
-        </li>
-      </ul>
+          
+      <!-- <h3>Students</h3> -->
+      <div *ngIf="students$ | async as students; else noStudents">
+        <app-user-list
+          [users]="(students$ | async) || []"
+          [roleFilter]="'student'"
+          [courseId]="courseId ?? undefined"
+        ></app-user-list>
+      </div>
       <ng-template #noStudents>
         <p>No students enrolled</p>
       </ng-template>
@@ -166,3 +63,4 @@
   </div>
 </div>
 
+ 

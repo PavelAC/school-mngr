@@ -26,23 +26,23 @@ export class CourseService {
   private firestore: Firestore = inject(Firestore);
 
   getCourses(user: User): Observable<Course[]> {
-    console.log('Getting courses for:', user.uid, 'Role:', user.role);
+    console.log('Getting courses for:', user.displayName, 'Role:', user.role);
     const coursesRef = collection(this.firestore, 'courses');
     
     let coursesQuery;
-    if (user.role === 'student') {
-      console.log('Creating student query');
-      coursesQuery = query(coursesRef, where('studentIds', 'array-contains', user.uid));
-    } else if (user.role === 'teacher') {
-      console.log('Creating teacher query');
-      coursesQuery = query(
-        coursesRef,
-        where('teacherId', '==', user.uid)
-      );
-    } else {
+    // if (user.role === 'student') {
+    //   console.log('Creating student query');
+    //   coursesQuery = query(coursesRef, where('studentIds', 'array-contains', user.uid));
+    // } else if (user.role === 'teacher') {
+    //   console.log('Creating teacher query');
+    //   coursesQuery = query(
+    //     coursesRef,
+    //     where('teacherId', '==', user.uid)
+    //   );
+    // } else {
       console.log('Creating admin query');
       coursesQuery = query(coursesRef);
-    }
+    // }
   
     return from(getDocs(coursesQuery)).pipe(
       tap(snapshot => console.log('Firestore returned:', snapshot.size, 'docs')),
@@ -189,5 +189,32 @@ export class CourseService {
       switchMap(() => this.getCourseById(courseId))
     );
   }
+
+  // getAllCourses(): Observable<Course[]> {
+  //   return this.firestore.collection<Course>('courses').valueChanges({ idField: 'id' });
+  // }
+  
+  // getFilteredCourses(user: User): Observable<Course[]> {
+  //   return this.getAllCourses().pipe(
+  //     map(courses => this.filterCourses(courses, user))
+  //   );
+  // }
+  
+  // private filterCourses(courses: Course[], user: User): Course[] {
+  //   if (!user) return [];
+    
+  //   if (user.role === 'student') {
+  //     return courses.filter(course => course.studentIds?.includes(user.uid) ?? false);
+  //   }
+    
+  //   if (user.role === 'teacher') {
+  //     return courses.filter(course => 
+  //       course.teacherId === user.uid || 
+  //       course.createdBy === user.uid
+  //     );
+  //   }
+    
+  //   return courses;
+  // }
   
 }

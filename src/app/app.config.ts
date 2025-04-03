@@ -13,6 +13,8 @@ import { authReducer } from './store/auth/auth.reducer';
 import { AuthEffects } from './store/auth/auth.effects';
 import { coursesReducer } from './store/course/courses.reducer';
 import { CourseEffects } from './store/course/courses.effects';
+import { gradesReducer } from './store/grades/grades.reducer';
+import { GradesEffects } from './store/grades/grades.effects';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAN38IfYsPOOfxeDNJotMO7omnAarjbXCs",
@@ -37,8 +39,10 @@ export const appConfig: ApplicationConfig = {
     provideStore(),
     provideState({ name: 'auth', reducer: authReducer }),
     provideState({ name: 'courses', reducer: coursesReducer }),
+    provideState({ name: 'grades', reducer: gradesReducer }),
     provideEffects(AuthEffects),
     provideEffects(CourseEffects),
+    provideEffects(GradesEffects),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode()

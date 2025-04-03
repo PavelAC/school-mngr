@@ -1,34 +1,150 @@
+/* User List Container */
+.user-list-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Error Message */
+.error {
+  color: #d9534f;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* User List Title */
+h3 {
+  text-align: center;
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* User List Grid */
 .user-list {
-    max-height: 400px;
-    overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+/* User Card */
+.user-card {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* User Info */
+.user-info {
+  margin-bottom: 1rem;
+}
+
+.name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #222;
+}
+
+.email {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.role {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #007bff;
+  text-transform: capitalize;
+}
+
+/* Grades Section */
+.grades-section {
+  background: #f1f8ff;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+
+.grades-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.grade-item {
+  background: #007bff;
+  color: #fff;
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 5px;
+}
+
+.no-grades {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.grade-average {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Grade Input */
+.grade-input {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.grade-input input {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.grade-input button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.grade-input button:hover {
+  background: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .user-list {
+    grid-template-columns: 1fr;
   }
   
-  .loading, .empty {
-    padding: 1rem;
-    text-align: center;
-    color: #666;
+  .grade-input {
+    flex-direction: column;
   }
   
-  .error {
-    padding: 1rem;
-    color: #d32f2f;
-    background: #ffebee;
+  .grade-input input {
+    width: 100%;
   }
-  
-  .role-badge {
-    margin-left: 8px;
-    padding: 2px 6px;
-    border-radius: 12px;
-    font-size: 0.8em;
-    background: #e0e0e0;
-  }
-  
-  .role-badge[data-role="teacher"] {
-    background: #bbdefb;
-    color: #0d47a1;
-  }
-  
-  .role-badge[data-role="student"] {
-    background: #c8e6c9;
-    color: #1b5e20;
-  }
+}

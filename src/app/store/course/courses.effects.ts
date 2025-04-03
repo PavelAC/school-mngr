@@ -24,7 +24,7 @@ export class CourseEffects {
     private store: Store
   ) {
     this.loadCourses$ = createEffect(() =>
-    this.actions$.pipe( // Ensure actions$ is properly defined here
+    this.actions$.pipe(
       ofType(CourseActions.loadCourses),
       withLatestFrom(this.store.select(fromAuth.selectCurrentUser)),
       switchMap(([_, user]) => {
@@ -34,28 +34,29 @@ export class CourseEffects {
         return this.courseService.getCourses(user).pipe(
           map((courses: Course[]) => {
             // Filter courses based on user role
-            let filteredCourses = courses;
-            if (user.role === 'student') {
-              filteredCourses = courses.filter(course => course.studentIds?.includes(user.uid) || false);
-            } else if (user.role === 'teacher') {
-              filteredCourses = courses.filter(course => 
-                course.teacherId?.includes(user.uid) || course.createdBy === user.uid
-              );
-            }
-            return CourseActions.loadCoursesSuccess({ courses: filteredCourses });
+            // let filteredCourses = courses;
+            // if (user.role === 'student') {
+            //   filteredCourses = courses.filter(course => course.studentIds?.includes(user.uid) || false);
+            // } else if (user.role === 'teacher') {
+            //   filteredCourses = courses.filter(course => 
+            //     course.teacherId?.includes(user.uid) || course.createdBy === user.uid
+            //   );
+            // }
+            return CourseActions.loadCoursesSuccess({ courses });
           }),
           catchError(error => of(CourseActions.loadCoursesFailure({ error })))
         );
       })
     )
-  );}
+  );
+
+}
 
   createCourse$ = createEffect(() => 
     this.actions$.pipe(
       ofType(CourseActions.createCourse),
       withLatestFrom(this.store.select(fromAuth.selectCurrentUser)),
       switchMap(([{ course, user: requestingUser }, currentUser]) => {
-        // Verify admin role
         if (!currentUser || currentUser.role !== 'admin') {
           return of(CourseActions.createCourseFailure({ 
             error: 'Only administrators can create courses' 
@@ -65,7 +66,7 @@ export class CourseEffects {
         const courseData: Omit<Course, 'id'> = {
           ...course,
           createdBy: currentUser.uid,
-          teacherId: course.teacherId, // Optional teacher assignment on creation
+          teacherId: course.teacherId,
           studentIds: [],
           createdAt: new Date(),
           updatedAt: new Date()
@@ -88,9 +89,6 @@ export class CourseEffects {
       ofType(CourseActions.enrollInCourse),
       withLatestFrom(this.store.select(fromAuth.selectCurrentUser)),
       switchMap(([{ courseId, userId }, currentUser]) => {
-        // Verify the requesting user is either:
-        // - An admin enrolling someone
-        // - The student enrolling themselves
         if (currentUser?.role !== 'admin' && currentUser?.uid !== userId) {
           return of(CourseActions.enrollInCourseFailure({ 
             error: 'Unauthorized enrollment attempt' 
@@ -107,7 +105,6 @@ export class CourseEffects {
     )
   );
 
-  // Add this effect
 updateCourse$ = createEffect(() =>
   this.actions$.pipe(
     ofType(CourseActions.updateCourse),
@@ -120,13 +117,11 @@ updateCourse$ = createEffect(() =>
   )
 );
 
-  // New effect for assigning teacher to course
   assignTeacherToCourse$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CourseActions.assignTeacherToCourse),
       withLatestFrom(this.store.select(fromAuth.selectCurrentUser)),
       switchMap(([{ courseId, teacherId, adminId }, currentUser]) => {
-        // Verify admin role
         if (currentUser?.uid !== adminId || currentUser?.role !== 'admin') {
           return of(CourseActions.assignTeacherToCourseFailure({
             error: 'Only administrators can assign teachers',
@@ -147,13 +142,11 @@ updateCourse$ = createEffect(() =>
     )
   );
 
-  // New effect for removing teacher from course
   removeTeacherFromCourse$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CourseActions.removeTeacherFromCourse),
       withLatestFrom(this.store.select(fromAuth.selectCurrentUser)),
       switchMap(([{ courseId, adminId }, currentUser]) => {
-        // Verify admin role
         if (currentUser?.uid !== adminId || currentUser?.role !== 'admin') {
           return of(CourseActions.removeTeacherFromCourseFailure({
             error: 'Only administrators can remove teachers',

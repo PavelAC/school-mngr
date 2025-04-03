@@ -39,19 +39,38 @@ export const selectFilteredCourses = createSelector(
   selectAllCourses,
   fromAuth.selectCurrentUser,
   (courses, user) => {
-    if (!user) return [];
+    // Debugging logs
+    console.log('All courses:', courses);
+    console.log('Current user:', user);
     
-    console.log('Filtering courses for user:', user.uid, user.role); // Debug
+    if (!user) {
+      console.log('No user - returning empty array');
+      return [];
+    }
     
-    // The service already filtered these, but we'll double-check
-    return courses.filter(course => {
+    const filteredCourses = courses.filter(course => {
+      // For students - check if they're enrolled
       if (user.role === 'student') {
-        return course.studentIds?.includes(user.uid);
-      } else if (user.role === 'teacher') {
-        return course.teacherId === user.uid || course.createdBy === user.uid;
+        const isEnrolled = course.studentIds?.includes(user.uid) ?? false;
+        console.log(`Course ${course.id} - student enrolled: ${isEnrolled}`);
+        return isEnrolled;
       }
-      return true; // Admin sees all
+      
+      // For teachers - check if they're assigned or created the course
+      if (user.role === 'teacher') {
+        const isTeacher = course.teacherId === user.uid;
+        const isCreator = course.createdBy === user.uid;
+        console.log(`Course ${course.id} - isTeacher: ${isTeacher}, isCreator: ${isCreator}`);
+        return isTeacher || isCreator;
+      }
+      
+      // For admins - return all courses
+      console.log('Admin user - returning all courses');
+      return true;
     });
+    
+    console.log('Filtered courses:', filteredCourses);
+    return filteredCourses;
   }
 );
 // Selector for the currently selected course
@@ -66,7 +85,7 @@ export const selectSelectedCourseId = createSelector(
 
 export const selectSelectedCourse = createSelector(
   selectAllCourses,
-  selectSelectedCourseId, // You need this selector
+  selectSelectedCourseId,
   (courses, selectedId) => selectedId ? courses.find(course => course.id === selectedId) : null
 );
 // export const selectFilteredCourses = createSelector(

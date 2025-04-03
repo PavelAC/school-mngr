@@ -5,12 +5,13 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AuthActions } from '../../store/auth/auth.actions';
 import { selectAuthError, selectAuthLoading } from '../../store/auth/auth.selectors';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,RouterModule],
 templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

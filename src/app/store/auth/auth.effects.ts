@@ -3,8 +3,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap, of, from } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
-import { AuthActions } from './auth.actions';
+import { AuthActions, loadUsers, loadUsersFailure, loadUsersSuccess } from './auth.actions';
 import { UserRole } from '../../models/user-roles.enum';
+import { User } from '../../models/user.model';
 
 @Injectable()
 export class AuthEffects {
@@ -34,6 +35,7 @@ export class AuthEffects {
             this.authService.currentUser$.pipe(
               map(user => {
                 if (!user) throw new Error('User data not found');
+                console.log(`curent user: ${user.displayName}, ${user.role}`);
                 return AuthActions.loginSuccess({ user });
               })
             )
@@ -69,6 +71,17 @@ export class AuthEffects {
       )
     )
   );
+  
+  logoutRedirect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.logoutSuccess),
+        tap(() => {
+          this.router.navigate(['/login']);
+        })
+      ),
+    { dispatch: false }
+  );
 
   // Update profile effect
   updateProfile$ = createEffect(() => 
@@ -94,7 +107,7 @@ export class AuthEffects {
       tap(({ user }) => {
         switch (user.role) {
           case 'admin':
-            this.router.navigate(['/courses']);
+            this.router.navigate(['/admin']);
             break;
           case 'teacher':
             this.router.navigate(['/courses']);
@@ -110,11 +123,27 @@ export class AuthEffects {
     { dispatch: false }
   );
 
-  logoutSuccess$ = createEffect(() =>
+  
+  loadUsers$ = createEffect(() => 
     this.actions$.pipe(
-      ofType(AuthActions.logoutSuccess),
-      tap(() => this.router.navigate(['/login']))
-    ),
-    { dispatch: false }
+      ofType(loadUsers),
+      tap(() => console.log('[AuthEffects] loadUsers action received')),
+      switchMap(() => 
+        this.authService.getAllUsers().pipe(
+          tap(users => console.log('[AuthEffects] Users loaded:', users)),
+          map((users: User[]) => {
+            if (!users) {
+              throw new Error('No users returned from service');
+            }
+            return loadUsersSuccess({ users });
+          }),
+          catchError(error => {
+            console.error('[AuthEffects] Error loading users:', error);
+            return of(loadUsersFailure({ error: error.message }));
+          })
+        )
+      )
+    )
   );
+  
 }
