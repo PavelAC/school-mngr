@@ -1,145 +1,227 @@
-/* General container for the course details */
 .course-details-container {
-  width: 100%;
-  max-width: 800px;
-  margin: 3rem auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 20px;
+  padding: 25px;
 }
 
-/* Header */
 .course-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
-.course-header h2 {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #333;
-}
-
-button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
+.title {
+  font-size: 28px;
   font-weight: 600;
-  color: white;
-  background-color: #007bff;
+  letter-spacing: -1px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  color: #00bfff;
+  margin: 0;
+  flex: 1;
+}
+
+.title::before {
+  width: 18px;
+  height: 18px;
+}
+
+.title::after {
+  width: 18px;
+  height: 18px;
+  animation: pulse 1s linear infinite;
+}
+
+.title::before,
+.title::after {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  left: 0px;
+  background-color: #00bfff;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.submit {
   border: none;
-  border-radius: 5px;
+  outline: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  transition: .3s ease;
+  background-color: #00bfff;
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
 }
 
-button:hover {
-  background-color: #0056b3;
+.submit:hover {
+  background-color: #00bfff96;
 }
 
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.secondary-button {
+  background-color: transparent;
+  border: 1px solid #00bfff;
 }
 
-/* Course content styling */
+.secondary-button:hover {
+  background-color: rgba(0, 191, 255, 0.1);
+}
+
 .course-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 25px;
 }
 
-/* Course description section */
-.course-description h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 1rem;
+.content-section {
+  background-color: #252525;
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid #333;
 }
 
-.course-description p {
-  font-size: 1rem;
-  color: #555;
+.section-title {
+  color: #00bfff;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 0 15px 0;
+  position: relative;
+  padding-left: 15px;
+}
+
+.section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: #00bfff;
+  border-radius: 50%;
+}
+
+.description-text {
   line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
 }
 
-/* Course metadata section */
-.course-metadata .metadata-grid {
+.metadata-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
 }
 
 .metadata-item {
-  font-size: 1rem;
-  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.metadata-item strong {
-  font-weight: bold;
+.metadata-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
 }
 
-.metadata-item span {
-  color: #555;
+.metadata-value {
+  color: #fff;
+  font-weight: 500;
 }
 
-/* Participants section */
-.course-participants h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 1rem;
+.teacher-info {
+  background-color: #333;
+  padding: 12px 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.course-participants p {
-  font-size: 1rem;
-  color: #555;
+.teacher-name {
+  font-weight: 500;
 }
 
-.course-participants .teacher,
-.course-participants .students {
-  margin-bottom: 1.5rem;
+.teacher-email {
+  color: rgba(255, 255, 255, 0.6);
 }
 
-/* No teachers or students message styling */
-.ng-template {
-  font-size: 1rem;
-  color: #777;
+.students-title {
+  margin-top: 10px;
 }
 
-.app-user-list {
-  margin-top: 1rem;
-  width: 100%;
+.empty-message {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  background-color: #333;
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
 }
 
-/* Media Queries for responsiveness */
-@media (max-width: 768px) {
+app-user-list {
+  display: block;
+  background-color: #333;
+  border-radius: 10px;
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+app-user-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+app-user-list::-webkit-scrollbar-track {
+  background: #252525;
+  border-radius: 10px;
+}
+
+app-user-list::-webkit-scrollbar-thumb {
+  background: #00bfff;
+  border-radius: 10px;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 600px) {
   .course-header {
     flex-direction: column;
     align-items: flex-start;
   }
-
-  .course-header h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
+  
+  .button-group {
+    width: 100%;
   }
-
-  .metadata-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .course-description p {
-    font-size: 0.95rem;
-  }
-
-  .metadata-item {
-    font-size: 0.9rem;
-  }
-
-  button {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.8rem;
+  
+  .submit {
+    flex: 1;
+    text-align: center;
   }
 }

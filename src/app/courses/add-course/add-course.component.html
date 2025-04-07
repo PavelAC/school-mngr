@@ -1,113 +1,103 @@
-<div class="add-course-container">
-  <h2>Create New Course</h2>
+<div class="form">
+  <p class="title">Create New Course</p>
+  <p class="message">Complete the form to create a new course in the system.</p>
   
   <!-- Access Control Message -->
   <div *ngIf="!(isAdmin$ | async)" class="unauthorized-message">
-    <!-- <mat-icon>warning</mat-icon> -->
     <p>Access Denied: You must be an administrator to create courses.</p>
   </div>
   
   <!-- Course Form -->
-  <form 
+  <form
     *ngIf="(isAdmin$ | async)"
-    [formGroup]="courseForm" 
+    [formGroup]="courseForm"
     (ngSubmit)="onSubmit()"
-    class="course-form"
   >
     <!-- Course Title -->
-    <div class="form-group">
-      <label for="title">Course Title *</label>
+    <label>
       <input 
-        type="text" 
-        id="title" 
-        formControlName="title" 
-        placeholder="Enter course title"
+        class="input" 
+        type="text"
+        formControlName="title"
+        placeholder=""
         [class.invalid]="courseForm.get('title')?.invalid && courseForm.get('title')?.touched"
+        required
       >
-      <div 
-        *ngIf="courseForm.get('title')?.invalid && courseForm.get('title')?.touched" 
+      <span>Course Title</span>
+      <div
+        *ngIf="courseForm.get('title')?.invalid && courseForm.get('title')?.touched"
         class="error-message"
       >
-        <!-- <mat-icon>error_outline</mat-icon> -->
         <span *ngIf="courseForm.get('title')?.errors?.['required']">Title is required</span>
         <span *ngIf="courseForm.get('title')?.errors?.['minlength']">
           Must be at least {{courseForm.get('title')?.errors?.['minlength'].requiredLength}} characters
         </span>
       </div>
-    </div>
+    </label>
     
     <!-- Course Description -->
-    <div class="form-group">
-      <label for="description">Course Description *</label>
-      <textarea 
-        id="description" 
-        formControlName="description" 
-        placeholder="Provide a detailed course description"
+    <label>
+      <textarea
+        class="input"
+        formControlName="description"
+        placeholder=""
         [class.invalid]="courseForm.get('description')?.invalid && courseForm.get('description')?.touched"
         rows="4"
+        required
       ></textarea>
-      <div 
-        *ngIf="courseForm.get('description')?.invalid && courseForm.get('description')?.touched" 
+      <span>Course Description</span>
+      <div
+        *ngIf="courseForm.get('description')?.invalid && courseForm.get('description')?.touched"
         class="error-message"
       >
-        <!-- <mat-icon>error_outline</mat-icon> -->
         <span *ngIf="courseForm.get('description')?.errors?.['required']">Description is required</span>
         <span *ngIf="courseForm.get('description')?.errors?.['minlength']">
           Must be at least {{courseForm.get('description')?.errors?.['minlength'].requiredLength}} characters
         </span>
       </div>
-    </div>
+    </label>
     
     <!-- Enrollment Code -->
-    <div class="form-group">
-      <label for="enrollmentCode">Enrollment Code (Optional)</label>
-      <div class="input-with-hint">
-        <input 
-          type="text" 
-          id="enrollmentCode" 
-          formControlName="enrollmentCode" 
-          placeholder="Leave blank to auto-generate"
-        >
-        <div class="hint">If left blank, a code will be generated automatically</div>
-      </div>
-    </div>
-
+    <label>
+      <input
+        class="input"
+        type="text"
+        formControlName="enrollmentCode"
+        placeholder=""
+      >
+      <span>Enrollment Code (Optional)</span>
+      <p class="message">If left blank, a code will be generated automatically</p>
+    </label>
+    
     <!-- Teacher Selection -->
-    <div class="form-group">
-      <label>Select Teacher *</label>
-      <app-user-list 
+    <label>
+      <span>Select Teacher</span>
+      <app-user-list
         [roleFilter]="'teacher'"
         (userSelected)="onTeacherSelected($event)"
         [class.invalid]="courseForm.get('teacherId')?.invalid && courseForm.get('teacherId')?.touched"
       ></app-user-list>
-      <div 
-        *ngIf="courseForm.get('teacherId')?.invalid && courseForm.get('teacherId')?.touched" 
+      <div
+        *ngIf="courseForm.get('teacherId')?.invalid && courseForm.get('teacherId')?.touched"
         class="error-message"
       >
-        <!-- <mat-icon>error_outline</mat-icon> -->
         <span>Please select a teacher for this course</span>
       </div>
-    </div>
+    </label>
     
     <!-- Form Actions -->
-    <div class="form-actions">
-      <button 
-        type="submit" 
-        class="primary-button"
-        [disabled]="courseForm.invalid || isSubmitting"
-      >
-        <span *ngIf="!isSubmitting">Create Course</span>
-        <span *ngIf="isSubmitting">
-          <!-- <mat-spinner diameter="20"></mat-spinner> -->
-          Creating...
-        </span>
-      </button>
-    </div>
+    <button
+      type="submit"
+      class="submit"
+      [disabled]="courseForm.invalid || isSubmitting"
+    >
+      <span *ngIf="!isSubmitting">Create Course</span>
+      <span *ngIf="isSubmitting">Creating...</span>
+    </button>
   </form>
   
   <!-- Error Message -->
   <div *ngIf="error" class="error-message global-error">
-    <!-- <mat-icon>error</mat-icon> -->
     <span>{{ error }}</span>
   </div>
 </div>

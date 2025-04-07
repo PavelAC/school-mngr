@@ -1,18 +1,18 @@
 <div class="user-list-container">
   
-  <div *ngIf="error$ | async as error" class="error">{{ error }}</div>
+  <div *ngIf="error$ | async as error" class="error-message global-error">{{ error }}</div>
 
   <!-- Users list -->
   <div *ngIf="!(error$ | async)">
-    <h3 *ngIf="roleFilter === 'student'">Students</h3>
-    <h3 *ngIf="roleFilter === 'teacher'">Teachers</h3>
+    <p class="section-title" *ngIf="roleFilter === 'student'">Students</p>
+    <p class="section-title" *ngIf="roleFilter === 'teacher'">Teachers</p>
     
     <div class="user-list">
       <div *ngFor="let user of filteredUsers" class="user-card">
         <div class="user-info">
           <div class="name">{{ user.displayName || user.email }}</div>
           <div class="email">{{ user.email }}</div>
-          <div class="role">{{ user.role }}</div>
+          <div class="role-badge">{{ user.role }}</div>
         </div>
         
         <!-- Student grades section -->
@@ -24,24 +24,29 @@
               </div>
             </div>
             <ng-template #noGrades>
-              <div class="no-grades">No grades yet</div>
+              <div class="empty-message">No grades yet</div>
             </ng-template>
           </div>
           <div class="grade-average">
-            Average: {{ studentGrades[user.uid]?.average || 'N/A' }}
+            Average: <span class="average-value">{{ studentGrades[user.uid]?.average || 'N/A' }}</span>
           </div>
         </div>
           
-          <!-- Grade input form -->
-          <div *ngIf="(currentUser$ | async) as currentUser">
-            <div class="grade-input" *ngIf="(isTeacher$ | async)">
-              <input type="number" min="1" max="10" 
-                     [(ngModel)]="newGrade[user.uid]"
-                     placeholder="Add grade (1-10)">
-              <button (click)="addGrade(user.uid)">Add Grade</button>
-            </div>
-          </div>
+        <!-- Grade input form -->
+        <div *ngIf="(currentUser$ | async) as currentUser">
+          <div class="grade-input" *ngIf="(isTeacher$ | async)">
+            <input 
+              type="number" 
+              min="1" 
+              max="10" 
+              [(ngModel)]="newGrade[user.uid]"
+              placeholder="Add grade (1-10)"
+              class="input grade-input-field"
+            >
+            <button (click)="addGrade(user.uid)" class="submit grade-submit">Add Grade</button>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>

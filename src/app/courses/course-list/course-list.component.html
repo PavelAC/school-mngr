@@ -1,23 +1,29 @@
-
-
-<div class="course-list">
+<div class="form course-list">
+  <p class="title">Available Courses</p>
+  <p class="message">Select a course to view details</p>
+  
   <!-- Show loading indicator -->
-  <div *ngIf="loading$ | async">Loading courses...</div>
+  <div *ngIf="loading$ | async" class="loading">
+    <div class="loading-pulse"></div>
+    <span>Loading courses...</span>
+  </div>
   
   <!-- List of courses -->
   <div class="courses-container">
-    <div *ngFor="let course of courses$ | async" 
-         class="course-item"
-         [class.selected]="(selectedCourseId$ | async) === course.id"
-         (click)="selectCourse(course.id)">
+    <div 
+      *ngFor="let course of courses$ | async"
+      class="course-item"
+      [class.selected]="(selectedCourseId$ | async) === course.id"
+      (click)="selectCourse(course.id)"
+    >
       {{ course.title }}
       <!-- Other course summary info -->
     </div>
   </div>
-    
+  
   <!-- Selected course detail -->
-  <app-course 
-    *ngIf="selectedCourse$ | async as selectedCourse" 
+  <app-course
+    *ngIf="selectedCourse$ | async as selectedCourse"
     [course]="selectedCourse">
   </app-course>
 </div>
