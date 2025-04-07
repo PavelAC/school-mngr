@@ -1,100 +1,153 @@
-/* General container for the course list */
 .course-list {
-  width: 100%;
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 800px;
+  padding: 25px;
+  border-radius: 20px;
+  position: relative;
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 1px solid #333;
+  margin: 20px auto;
 }
 
-/* Loading indicator */
-.course-list .loading {
-  font-size: 1.2rem;
-  text-align: center;
-  color: #007bff;
-  font-weight: bold;
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -1px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  color: #00bfff;
+  margin: 0 0 5px 0;
 }
 
-/* Courses container */
+.title::before {
+  width: 18px;
+  height: 18px;
+}
+
+.title::after {
+  width: 18px;
+  height: 18px;
+  animation: pulse 1s linear infinite;
+}
+
+.title::before,
+.title::after {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  left: 0px;
+  background-color: #00bfff;
+}
+
+.message {
+  font-size: 14.5px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 15px 0;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.loading-pulse {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #00bfff;
+  animation: pulse 1s linear infinite;
+}
+
 .courses-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 5px;
 }
 
-/* Individual course item */
+.courses-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.courses-container::-webkit-scrollbar-track {
+  background: #333;
+  border-radius: 10px;
+}
+
+.courses-container::-webkit-scrollbar-thumb {
+  background: #00bfff;
+  border-radius: 10px;
+}
+
 .course-item {
-  width: 100%;
-  max-width: 280px;
-  padding: 1rem;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #333;
+  border: 1px solid rgba(105, 105, 105, 0.397);
+  border-radius: 10px;
+  padding: 15px;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .course-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 191, 255, 0.2);
+  border-color: rgba(0, 191, 255, 0.4);
 }
 
-/* Highlight selected course */
 .course-item.selected {
-  border-color: #007bff;
-  background-color: #e7f1ff;
+  background-color: rgba(0, 191, 255, 0.15);
+  border-color: #00bfff;
+  position: relative;
 }
 
-/* Course title */
-.course-item h3 {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 0.5rem;
+.course-item.selected::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: #00bfff;
+  border-radius: 10px 0 0 10px;
 }
 
-/* Course summary info */
-.course-item p {
-  font-size: 1rem;
-  color: #555;
-  margin: 0.5rem 0;
-  line-height: 1.5;
+app-course {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+  display: block;
 }
 
-/* Selected course details */
-.app-course {
-  margin-top: 2rem;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Media Queries for responsiveness */
-@media (max-width: 768px) {
-  .courses-container {
-    flex-direction: column;
-    align-items: center;
+@keyframes pulse {
+  from {
+    transform: scale(0.9);
+    opacity: 1;
   }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
 
+@media (max-width: 600px) {
+  .course-list {
+    padding: 15px;
+  }
+  
   .course-item {
-    width: 100%;
-    max-width: 95%;
-  }
-
-  .course-item h3 {
-    font-size: 1.1rem;
-  }
-
-  .course-item p {
-    font-size: 0.9rem;
-  }
-
-  .app-course {
-    width: 90%;
+    padding: 12px;
   }
 }

@@ -1,150 +1,186 @@
-/* User List Container */
 .user-list-container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
-/* Error Message */
-.error {
-  color: #d9534f;
-  font-size: 1rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 1rem;
+.section-title {
+  color: #00bfff;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 0 15px 0;
+  position: relative;
+  padding-left: 15px;
 }
 
-/* User List Title */
-h3 {
-  text-align: center;
-  color: #333;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+.section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: #00bfff;
+  border-radius: 50%;
 }
 
-/* User List Grid */
 .user-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
 }
 
-/* User Card */
 .user-card {
-  background: #f9f9f9;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #333;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid rgba(105, 105, 105, 0.397);
+  transition: all 0.2s ease;
 }
 
 .user-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: rgba(0, 191, 255, 0.4);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* User Info */
 .user-info {
-  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
 
 .name {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #222;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+  flex: 1;
 }
 
 .email {
-  font-size: 0.9rem;
-  color: #555;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  flex: 2;
 }
 
-.role {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #007bff;
+.role-badge {
+  background-color: rgba(0, 191, 255, 0.15);
+  color: #00bfff;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
   text-transform: capitalize;
 }
 
-/* Grades Section */
 .grades-section {
-  background: #f1f8ff;
-  padding: 1rem;
-  border-radius: 6px;
-  margin-top: 1rem;
+  border-top: 1px solid rgba(105, 105, 105, 0.397);
+  padding-top: 12px;
+  margin-top: 5px;
 }
 
 .grades-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .grade-item {
-  background: #007bff;
+  background-color: #252525;
   color: #fff;
-  font-size: 0.9rem;
-  padding: 0.5rem 0.75rem;
+  padding: 5px 10px;
   border-radius: 5px;
+  font-size: 14px;
+  border: 1px solid rgba(105, 105, 105, 0.397);
 }
 
-.no-grades {
-  font-size: 0.9rem;
-  color: #888;
+.empty-message {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  font-size: 14px;
+  padding: 5px 0;
 }
 
 .grade-average {
-  margin-top: 0.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #333;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
-/* Grade Input */
+.average-value {
+  font-weight: 600;
+  color: #00bfff;
+}
+
 .grade-input {
-  margin-top: 1rem;
   display: flex;
-  gap: 0.5rem;
+  gap: 10px;
+  margin-top: 10px;
+  align-items: center;
 }
 
-.grade-input input {
+.grade-input-field {
+  background-color: #252525;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(105, 105, 105, 0.397);
+  font-size: 14px;
   flex: 1;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  outline: none;
+  transition: border 0.3s ease;
 }
 
-.grade-input button {
-  background: #28a745;
-  color: white;
+.grade-input-field:focus {
+  border-color: #00bfff;
+}
+
+.grade-submit {
   border: none;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border-radius: 5px;
+  outline: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  transition: .3s ease;
+  background-color: #00bfff;
   cursor: pointer;
-  transition: background 0.3s ease;
 }
 
-.grade-input button:hover {
-  background: #218838;
+.grade-submit:hover {
+  background-color: #00bfff96;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .user-list {
-    grid-template-columns: 1fr;
+.global-error {
+  background-color: rgba(255, 60, 60, 0.1);
+  border: 1px solid #ff3c3c;
+  border-radius: 10px;
+  padding: 12px;
+  margin: 10px 0;
+  text-align: center;
+  color: #ff3c3c;
+}
+
+@media (max-width: 600px) {
+  .user-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .email {
+    font-size: 13px;
   }
   
   .grade-input {
     flex-direction: column;
+    width: 100%;
   }
   
-  .grade-input input {
+  .grade-submit {
     width: 100%;
   }
 }

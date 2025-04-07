@@ -1,7 +1,27 @@
-<nav>
+<!-- <nav>
   <ul>
     <li ><a routerLink="/login">Login</a></li>
     <li ><a routerLink="/register">Register</a></li>
-    <!-- <li *ngIf="currentUser$ | async"><a (click)="logout()">Logout</a></li> -->
   </ul>
-</nav>
+</nav> -->
+
+<div class="input">
+  <a class="value" routerLink="/login">
+    <svg class="normal" viewBox="0 0 24 24">
+      <path
+        d="M10,17V14H3V10H10V7L15,12L10,17M19,3H5A2,2 0 0,0 3,5V9H5V5H19V19H5V15H3V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3Z"
+        fill="currentColor"
+      />
+    </svg>
+    Login
+  </a>
+  <a class="value" routerLink="/register">
+    <svg class="normal" viewBox="0 0 24 24">
+      <path
+        d="M15,14C17.67,14 20.5,15.17 20.5,17.5V20H9.5V17.5C9.5,15.17 12.33,14 15,14M15,4A4,4 0 0,1 19,8A4,4 0 0,1 15,12A4,4 0 0,1 11,8A4,4 0 0,1 15,4Z"
+        fill="currentColor"
+      />
+    </svg>
+    Register
+  </a>
+</div>
