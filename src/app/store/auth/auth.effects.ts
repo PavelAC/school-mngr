@@ -1,17 +1,19 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap, tap, of, from } from 'rxjs';
+import { catchError, map, switchMap, tap, of, from, finalize } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
 import { AuthActions, loadUsers, loadUsersFailure, loadUsersSuccess } from './auth.actions';
 import { UserRole } from '../../models/user-roles.enum';
 import { User } from '../../models/user.model';
+import { LoadingService } from '../../loading.service';
 
 @Injectable()
 export class AuthEffects {
   private actions$ = inject(Actions);
   private authService = inject(AuthService);
   private router = inject(Router);
+   private loading = inject(LoadingService);
 
   // Check Auth State effect
   checkAuthState$ = createEffect(() => 
@@ -26,9 +28,10 @@ export class AuthEffects {
   );
 
   // Login effect
-  login$ = createEffect(() => 
+  login$ = createEffect(() =>  
     this.actions$.pipe(
       ofType(AuthActions.login),
+      tap(() => this.loading.show()),
       switchMap(({ email, password }) => 
         this.authService.login(email, password).pipe(
           switchMap(firebaseUser => 
@@ -40,7 +43,8 @@ export class AuthEffects {
               })
             )
           ),
-          catchError(error => of(AuthActions.loginFailure({ error: error.message })))
+          catchError(error => of(AuthActions.loginFailure({ error: error.message }))),
+          finalize(() => this.loading.hide())
         )
       )
     )
@@ -50,10 +54,12 @@ export class AuthEffects {
   register$ = createEffect(() => 
     this.actions$.pipe(
       ofType(AuthActions.register),
+      tap(() => this.loading.show()),
       switchMap(({ email, password, role, displayName }) => 
         this.authService.register(email, password, role as UserRole, displayName).pipe(
           map(user => AuthActions.registerSuccess({ user })),
-          catchError(error => of(AuthActions.registerFailure({ error: error.message })))
+          catchError(error => of(AuthActions.registerFailure({ error: error.message }))),
+          finalize(() => this.loading.hide())
         )
       )
     )
@@ -124,11 +130,14 @@ export class AuthEffects {
   );
 
   
-  loadUsers$ = createEffect(() => 
+  loadUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadUsers),
-      tap(() => console.log('[AuthEffects] loadUsers action received')),
-      switchMap(() => 
+      tap(() => {
+        console.log('[AuthEffects] loadUsers action received');
+        this.loading.show();
+      }),
+      switchMap(() =>
         this.authService.getAllUsers().pipe(
           tap(users => console.log('[AuthEffects] Users loaded:', users)),
           map((users: User[]) => {
@@ -140,10 +149,12 @@ export class AuthEffects {
           catchError(error => {
             console.error('[AuthEffects] Error loading users:', error);
             return of(loadUsersFailure({ error: error.message }));
-          })
+          }),
+          finalize(() => this.loading.hide())
         )
       )
     )
   );
+  
   
 }

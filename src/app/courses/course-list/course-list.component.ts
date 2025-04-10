@@ -22,7 +22,6 @@ import { AuthService } from '../../auth/services/auth.service';
 export class CourseListComponent implements OnInit{
   
   private store = inject(Store);
-  private authSerive = inject(AuthService)
 
   courses$ = this.store.select(selectAllCourses);
   selectedCourse$ = this.store.select(selectSelectedCourse);
