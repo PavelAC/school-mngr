@@ -15,6 +15,7 @@ import { coursesReducer } from './store/course/courses.reducer';
 import { CourseEffects } from './store/course/courses.effects';
 import { gradesReducer } from './store/grades/grades.reducer';
 import { GradesEffects } from './store/grades/grades.effects';
+import { FirebaseActionLoggerEffects } from './store/firebase-action-logger';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAN38IfYsPOOfxeDNJotMO7omnAarjbXCs",
@@ -43,9 +44,14 @@ export const appConfig: ApplicationConfig = {
     provideEffects(AuthEffects),
     provideEffects(CourseEffects),
     provideEffects(GradesEffects),
+    provideEffects(FirebaseActionLoggerEffects),
     provideStoreDevtools({
       maxAge: 25,
-      logOnly: !isDevMode()
+      logOnly: !isDevMode(),
+      autoPause: true,
+      trace: true,
+      traceLimit: 75,
+      connectInZone: true,
     }),
     
     provideAnimations()

@@ -78,10 +78,13 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   }
 
   onTeacherSelected(user: User): void {
-    this.selectedTeacher = user;
-    this.courseForm.patchValue({ teacherId: user.uid });
-    this.courseForm.get('teacherId')?.markAsTouched();
-    console.log(this.selectedTeacher)
+    if (user?.uid) {
+      this.selectedTeacher = user;
+      this.courseForm.patchValue({ teacherId: user.uid });
+      this.courseForm.get('teacherId')?.markAsTouched();
+      this.courseForm.get('teacherId')?.markAsDirty();
+      console.log('Selected Teacher ',this.selectedTeacher);
+    }
   }
 
   onSubmit(): void {
