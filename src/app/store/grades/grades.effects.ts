@@ -33,7 +33,6 @@ export class GradesEffects {
       ) {this.loadGrades$ = createEffect(() => this.actions$.pipe(
         ofType(loadGrades),
         mergeMap(({ courseId }) => 
-          // Convert the Promise to an Observable using 'from'
           from(getDocs(query(
             collection(this.firestore, 'grades'),
             where('courseId', '==', courseId)
@@ -56,11 +55,9 @@ export class GradesEffects {
     mergeMap(({ courseId, studentId, grade }) => {
       const gradeId = `${courseId}_${studentId}`;
       
-      // First check if the grade document already exists
       return from(getDoc(doc(this.firestore, 'grades', gradeId))).pipe(
         switchMap(docSnap => {
           if (docSnap.exists()) {
-            // Document exists, update it by adding the new grade
             const existingData = docSnap.data() as Grade;
             const newGrades = [...(existingData.grades || []), grade];
             const average = newGrades.reduce((sum, g) => sum + g, 0) / newGrades.length;
@@ -71,7 +68,6 @@ export class GradesEffects {
               lastUpdated: new Date()
             }));
           } else {
-            // Document doesn't exist, create a new one
             return from(setDoc(doc(this.firestore, 'grades', gradeId), {
               courseId,
               studentId,

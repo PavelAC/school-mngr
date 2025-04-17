@@ -138,5 +138,6 @@ export class UserListComponent implements OnInit, OnDestroy, OnChanges {
 
   selectUser(user: User): void {
     this.userSelected.emit(user);
+    console.log('select user payload: ',this.userSelected)
   }
 }

@@ -9,7 +9,7 @@
     
     <div class="user-list">
       <div *ngFor="let user of filteredUsers" class="user-card">
-        <div class="user-info">
+        <div class="user-info" (click)="selectUser(user)">
           <div class="name">{{ user.displayName || user.email }}</div>
           <div class="email">{{ user.email }}</div>
           <div class="role-badge">{{ user.role }}</div>
